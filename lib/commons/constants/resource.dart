@@ -1,4 +1,5 @@
 class Resource {
+  static const bool debug = true;
   static const String appName = 'iCarevn';
   static const String success = 'Success';
   static const String str_login = 'Đăng nhập';

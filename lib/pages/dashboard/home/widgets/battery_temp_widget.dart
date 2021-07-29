@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:tempapp/commons/constants/resource.dart';
+import 'package:tempapp/commons/utils/widget_utils.dart';
 import 'package:tempapp/models/size_info_model.dart';
 import 'package:tempapp/pages/dashboard/home/home_controller.dart';
 import 'package:tempapp/pages/dashboard/home/widgets/pin_widget/battery_level_painter_widget.dart';
@@ -55,14 +56,16 @@ class BatteryTempWidget extends StatelessWidget {
               children: [
                 Container(
                   margin: EdgeInsets.only(right: 2),
-                  child: Obx(() => Text('${controller.deviceName}',
+                  child: Obx(() => Text('${controller.deviceName.value}',
                       style: TextStyle(
                           color: Colors.grey.shade800, fontSize: sizeInfo.fontSize, fontWeight: FontWeight.w500))),
                 ),
                 Icon(Icons.autorenew, color: Colors.blue, size: 28),
               ],
             ),
-            onTap: () { /* Hiển thị nhiệt độ hiện tại */ },
+            onTap: () {
+              /* Hiển thị nhiệt độ hiện tại */
+            },
           )
         ],
       ),
@@ -72,7 +75,15 @@ class BatteryTempWidget extends StatelessWidget {
   //Hiện thị file gif và nhiệt độ theo dõi
   Widget deviceGifAndTempBottom() {
     return GetBuilder<HomeController>(
-      builder: (controller) => (controller.device == null) ? deviceGifAndButtonConnectWidget() : getServiceWidget(),
+      builder: (controller) {
+        if (controller.device == null) {
+          printText('--->call deviceGifAndButtonConnectWidget.');
+          return deviceGifAndButtonConnectWidget();
+        } else {
+          printText('--->call getServiceWidget.');
+          return getServiceWidget();
+        }
+      },
     );
   }
 
@@ -124,24 +135,38 @@ class BatteryTempWidget extends StatelessWidget {
           initialData: BluetoothDeviceState.connecting,
           builder: (c, snapshot) {
             if (snapshot.data == BluetoothDeviceState.connected) {
+              printText('--->call connected.');
               controller.isDeviceConnecting(false);
               controller.device!.discoverServices();
               return StreamBuilder<List<BluetoothService>>(
-                stream: controller.device!.services,
-                initialData: [],
-                builder: (c, snapshot) =>
-                    (snapshot.data!.length > 0) ? getCharacterWidget(snapshot.data!) : showTempWatchWidget(0),
-              );
+                  stream: controller.device!.services,
+                  initialData: [],
+                  builder: (c, snapshot) {
+                    if (snapshot.data!.length > 0) {
+                      return getCharacterWidget(snapshot.data!);
+                    } else {
+                      return showNoneTempWatchWidget(0);
+                    }
+                  });
             } else if (snapshot.data == BluetoothDeviceState.connecting) {
+              printText('--->call connecting.');
               return Container(child: Center(child: Text('Đang kết nối!')));
             } else {
               return Obx(() {
                 if (controller.isDeviceConnecting.value) {
+                  printText('--->call isDeviceConnecting = true.');
                   return InkWell(
                     child: ProgressBarStyle(sizeInfo: sizeInfo),
                     onTap: () => showDeviceState(controller, sizeInfo),
                   );
                 } else {
+                  printText('--->call isDeviceConnecting = false.');
+                  if (controller.device != null) {
+                    Future.delayed(Duration(seconds: 1), () {
+                      printText('--->call disConnected.');
+                      controller.disConnect();
+                    }); // use await builder
+                  }
                   return deviceGifAndButtonConnectWidget();
                 }
               });
@@ -172,7 +197,7 @@ class BatteryTempWidget extends StatelessWidget {
             ? controller.getTempDataThermometer(snapshot.data!)
             : 0.0;
         String date = DateFormat("yyyy-MM-dd hh:mm:ss").format(DateTime.now());
-        print('date: $date - Value: $value');
+        printText('date: $date - Value: $value');
         return showTempWatchWidget(value);
       },
     );
@@ -234,6 +259,96 @@ class BatteryTempWidget extends StatelessWidget {
                         enableAnimation: true,
                         enableDragging: true,
                       ),
+                    ], annotations: <GaugeAnnotation>[
+                      GaugeAnnotation(
+                          widget: Container(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('$tempValue',
+                                    style: TextStyle(
+                                        color: tempValue > Resource.temperature_limit ? Colors.red : Colors.blue,
+                                        fontSize: sizeInfo.fontSize,
+                                        fontWeight: FontWeight.bold)),
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [Text('°C', style: TextStyle(fontWeight: FontWeight.w500))],
+                                )
+                              ],
+                            ),
+                          ),
+                          positionFactor: 0.8,
+                          angle: 90),
+                    ])
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  //Hiện thị nhiệt độ none
+  Widget showNoneTempWatchWidget(double tempValue) {
+    return InkWell(
+      onTap: () => showDeviceState(controller, sizeInfo),
+      child: Container(
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                alignment: Alignment.center,
+                width: sizeInfo.screenSize.width * 0.7,
+                height: sizeInfo.screenSize.height * 0.3,
+                child: SfRadialGauge(
+                  axes: <RadialAxis>[
+                    RadialAxis(minimum: 20, maximum: 40, minorTicksPerInterval: 10, ranges: <GaugeRange>[
+                      GaugeRange(
+                        startValue: 20,
+                        endValue: 40,
+                        startWidth: 11.5,
+                        endWidth: 11.5,
+                        gradient: SweepGradient(
+                          stops: <double>[0.3, 0.8, 0.9],
+                          colors: <Color>[Colors.green, Colors.yellow, Colors.red],
+                        ),
+                      ),
+                    ], pointers: <GaugePointer>[
+                      NeedlePointer(
+                        value: tempValue,
+                        needleColor: Colors.grey.shade800,
+                        tailStyle: TailStyle(
+                            length: 0.25, width: 5, color: Colors.grey.shade800, lengthUnit: GaugeSizeUnit.factor),
+                        needleLength: sizeInfo.screenSize.width * 0.00153,
+                        needleStartWidth: 1,
+                        needleEndWidth: 5,
+                        knobStyle: KnobStyle(
+                            knobRadius: 0.07,
+                            color: Colors.white,
+                            borderWidth: 0.05,
+                            borderColor: Colors.grey.shade800),
+                        lengthUnit: GaugeSizeUnit.factor,
+                        enableAnimation: true,
+                      ),
+                    /*  MarkerPointer(
+                        value: 35.5,
+                        elevation: 4,
+                        markerWidth: 23,
+                        markerHeight: 26,
+                        color: const Color(0xFFF67280),
+                        markerType: MarkerType.invertedTriangle,
+                        markerOffset: -12,
+                        enableAnimation: true,
+                        enableDragging: true,
+                      ),*/
                     ], annotations: <GaugeAnnotation>[
                       GaugeAnnotation(
                           widget: Container(

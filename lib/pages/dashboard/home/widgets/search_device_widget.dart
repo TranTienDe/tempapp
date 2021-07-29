@@ -112,10 +112,12 @@ Widget titleWidget(HomeController controller, SizeInfoModel sizeInfo) {
 Widget bodyWidget(SizeInfoModel sizeInfo) {
   return SingleChildScrollView(
     child: Container(
-      child: GetBuilder<HomeController>(
-        builder: (controller) =>
-            (controller.device != null) ? deviceStateTitle(controller, controller.device!) : findDevice(controller),
-      ),
+      child: GetBuilder<HomeController>(builder: (controller) {
+        if (controller.device != null)
+          return deviceStateTitle(controller, controller.device!);
+        else
+          return findDevice(controller);
+      }),
     ),
   );
 }
@@ -173,7 +175,7 @@ Widget deviceStateTitle(HomeController controller, BluetoothDevice device) {
           case BluetoothDeviceState.disconnected:
             text = 'Kết nối';
             onPressed = () {
-             controller.connect(device);
+              controller.connect(device);
               Get.back();
             };
             break;
@@ -183,7 +185,7 @@ Widget deviceStateTitle(HomeController controller, BluetoothDevice device) {
             break;
         }
         return Obx(
-          () => (controller.isDeviceState.value)
+          () => (controller.isDeviceStating.value)
               ? Container(
                   margin: EdgeInsets.only(right: 15),
                   width: 30,
