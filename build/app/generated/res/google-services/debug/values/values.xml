@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">782184188087-sfaa6fg13njq36aijtto3v4g2efku0m0.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://tempapp-66b71.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">782184188087</string>
+    <string name="google_api_key" translatable="false">AIzaSyC-KSYyHH0SlGlSobX14suNyy9B212_zLU</string>
+    <string name="google_app_id" translatable="false">1:782184188087:android:29af81eefa9eea2bfa2532</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyC-KSYyHH0SlGlSobX14suNyy9B212_zLU</string>
+    <string name="google_storage_bucket" translatable="false">tempapp-66b71.appspot.com</string>
+    <string name="project_id" translatable="false">tempapp-66b71</string>
+</resources>

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "782184188087",
+    "firebase_url": "https://tempapp-66b71.firebaseio.com",
+    "project_id": "tempapp-66b71",
+    "storage_bucket": "tempapp-66b71.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:782184188087:android:29af81eefa9eea2bfa2532",
+        "android_client_info": {
+          "package_name": "vn.icare.tempapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "782184188087-d6e8ak7jqmm4tae5s7hht6hk5j8s43t3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "vn.icare.tempapp",
+            "certificate_hash": "b74b392f1c74201b37ea6366f42611cc3bc126d2"
+          }
+        },
+        {
+          "client_id": "782184188087-sfaa6fg13njq36aijtto3v4g2efku0m0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-KSYyHH0SlGlSobX14suNyy9B212_zLU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "782184188087-sfaa6fg13njq36aijtto3v4g2efku0m0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
