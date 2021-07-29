@@ -3,10 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:get/get.dart';
 import 'package:tempapp/commons/constants/resource.dart';
+import 'package:tempapp/commons/utils/widget_utils.dart';
 import 'package:tempapp/models/size_info_model.dart';
 import 'package:tempapp/pages/dashboard/home/home_controller.dart';
 
 void showDeviceState(HomeController controller, SizeInfoModel sizeInfo) {
+  if (controller.device == null) {
+    Future.delayed(Duration(milliseconds: 1), () {
+      controller.isStartScan(true);
+      controller.startScan(timeout: Duration(seconds: 4)).whenComplete(() => controller.isStartScan(false));
+    });
+  }
+
   Get.bottomSheet(
     Container(
       height: sizeInfo.screenSize.height * 0.25,
@@ -25,13 +33,6 @@ void showDeviceState(HomeController controller, SizeInfoModel sizeInfo) {
     ),
     isDismissible: true,
   );
-
-  if (!controller.hasDevice.value) {
-    Future.delayed(Duration(seconds: 1), () {
-      controller.isStartScan(true);
-      controller.startScan(timeout: Duration(seconds: 4)).whenComplete(() => controller.isStartScan(false));
-    });
-  }
 }
 
 Widget titleWidget(HomeController controller, SizeInfoModel sizeInfo) {
@@ -113,10 +114,13 @@ Widget bodyWidget(SizeInfoModel sizeInfo) {
   return SingleChildScrollView(
     child: Container(
       child: GetBuilder<HomeController>(builder: (controller) {
-        if (controller.device != null)
+        if (controller.device != null) {
+          printText('--->Show device exist.');
           return deviceStateTitle(controller, controller.device!);
-        else
+        } else {
+          printText('--->Find device.');
           return findDevice(controller);
+        }
       }),
     ),
   );

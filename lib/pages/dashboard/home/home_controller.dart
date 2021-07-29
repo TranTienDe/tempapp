@@ -35,43 +35,27 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    //onDeviceStateListener();
   }
 
   @override
   void onClose() {
     super.onClose();
-    //deviceStateTimer?.cancel();
-  }
-
-  void onDeviceStateListener() {
-    deviceStateTimer = Timer.periodic(Duration(seconds: 1), (timer) {
-      //print('updateDeviceState: $updateDeviceState');
-      if (updateDeviceState == currentDeviceState) return;
-
-      switch (updateDeviceState) {
-        case BluetoothDeviceState.connected:
-          currentDeviceState = updateDeviceState;
-          showSnackBar('Đã kết nối thiết bị', 'Thiết bị đang trong quá trình kết nối !');
-          break;
-        case BluetoothDeviceState.disconnected:
-          currentDeviceState = updateDeviceState;
-          showSnackBar('Đã ngắt kết nối thiết bị', '');
-          break;
-      }
-    });
   }
 
   void connect(BluetoothDevice device) {
     try {
       this.isDeviceStating(true);
       this.isDeviceConnecting(true);
-      device.connect(autoConnect: false).timeout(Duration(seconds: 30), onTimeout: () {
-        printText('--->call device connect timeout.');
-        this.isDeviceConnecting(false);
-      });
       this.device = device;
       this.deviceName(this.device!.name);
+      this.device!.connect(autoConnect: false).timeout(Duration(seconds: 20), onTimeout: () {
+        printText('--->call device connect timeout 1st.');
+        this.device!.connect(autoConnect: false).timeout(Duration(seconds: 20), onTimeout: () {
+          printText('--->call device connect timeout 2nd.');
+          this.isDeviceConnecting(false);
+        });
+      });
+      printText('--->call device connect.');
       update();
     } catch (ex) {
       showSnackBar('Error', ex.toString());
@@ -82,7 +66,7 @@ class HomeController extends GetxController {
 
   void disConnect() async {
     try {
-      if ( this.device == null) throw 'Device is null!';
+      if (this.device == null) throw 'Device is null!';
       this.isDeviceStating(true);
       this.device!.disconnect();
       this.device = null;
