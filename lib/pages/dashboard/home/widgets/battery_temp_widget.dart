@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:tempapp/commons/constants/resource.dart';
 import 'package:tempapp/commons/utils/widget_utils.dart';
+import 'package:tempapp/commons/widgets/confirm_dialog.dart';
 import 'package:tempapp/models/size_info_model.dart';
 import 'package:tempapp/pages/dashboard/home/home_controller.dart';
 import 'package:tempapp/pages/dashboard/home/widgets/pin_widget/battery_level_painter_widget.dart';
@@ -28,7 +29,7 @@ class BatteryTempWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          batteryAndCurrentTempTop(),
+          batteryAndCurrentTempTop(context),
           deviceGifAndTempBottom(),
         ],
       ),
@@ -36,7 +37,7 @@ class BatteryTempWidget extends StatelessWidget {
   }
 
   //Hiển thị phần trăm pin và lấy nhiệt độ hiện tại
-  Widget batteryAndCurrentTempTop() {
+  Widget batteryAndCurrentTempTop(BuildContext context) {
     return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,7 +65,8 @@ class BatteryTempWidget extends StatelessWidget {
               ],
             ),
             onTap: () {
-              /* Hiển thị nhiệt độ hiện tại */
+              String content = "Nhiệt độ hiện tại đang là: ${controller.currentTemp.toString()} °C";
+              ConfirmDialog.showButtonPress(context, true, '', content, 'Đóng', () => Navigator.of(context).pop());
             },
           )
         ],
@@ -196,6 +198,7 @@ class BatteryTempWidget extends StatelessWidget {
         final value = (snapshot.data != null && snapshot.data!.length > 0)
             ? controller.getTempDataThermometer(snapshot.data!)
             : 0.0;
+        controller.currentTemp = value;
         String date = DateFormat("yyyy-MM-dd hh:mm:ss").format(DateTime.now());
         printText('date: $date - Value: $value');
         return showTempWatchWidget(value);
@@ -266,11 +269,13 @@ class BatteryTempWidget extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('$tempValue',
-                                    style: TextStyle(
-                                        color: tempValue > Resource.temperature_limit ? Colors.red : Colors.blue,
-                                        fontSize: sizeInfo.fontSize,
-                                        fontWeight: FontWeight.bold)),
+                                Text(
+                                  '$tempValue',
+                                  style: TextStyle(
+                                      color: tempValue > Resource.temperature_limit ? Colors.red : Colors.blue,
+                                      fontSize: sizeInfo.fontSize,
+                                      fontWeight: FontWeight.bold),
+                                ),
                                 Column(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.start,
@@ -338,7 +343,7 @@ class BatteryTempWidget extends StatelessWidget {
                         lengthUnit: GaugeSizeUnit.factor,
                         enableAnimation: true,
                       ),
-                    /*  MarkerPointer(
+                      /*  MarkerPointer(
                         value: 35.5,
                         elevation: 4,
                         markerWidth: 23,

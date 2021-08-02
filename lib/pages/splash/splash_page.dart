@@ -55,14 +55,14 @@ class SplashPage extends GetView<SplashController> {
                               text: '© Copyright by ',
                               style: TextStyle(
                                 fontSize: 17,
-                                color: Colors.blue.shade900,
+                                color: Colors.blue,
                               ),
                               children: <InlineSpan>[
                                 TextSpan(
                                     text: 'iCarevn!',
                                     style: TextStyle(
                                         fontSize: 18,
-                                        color: Colors.blue.shade900,
+                                        color: Colors.blue,
                                         fontWeight: FontWeight.bold))
                               ]),
                         )

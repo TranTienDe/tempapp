@@ -2,6 +2,7 @@ class Resource {
   static const bool debug = true;
   static const String appName = 'iCarevn';
   static const String success = 'Success';
+  static const String app_title = 'Thông báo';
   static const String str_login = 'Đăng nhập';
   static const String str_register = 'Đăng ký tài khoản';
   static const String str_call_support = 'Gọi điện thoại hỗ trợ';

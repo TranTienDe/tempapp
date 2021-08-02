@@ -32,6 +32,8 @@ class HomeController extends GetxController {
 
   Timer? deviceStateTimer;
 
+  double currentTemp = 0.0;
+
   @override
   void onInit() {
     super.onInit();
@@ -89,7 +91,7 @@ class HomeController extends GetxController {
       String tempFixed = doubleValue.toStringAsFixed(2);
       dTemp = double.parse(tempFixed);
     } catch (ex) {
-      print('---> Error: ${ex.toString()}');
+      printText('---> Error: ${ex.toString()}');
     }
     return dTemp;
   }
