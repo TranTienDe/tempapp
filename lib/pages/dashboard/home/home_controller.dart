@@ -95,4 +95,10 @@ class HomeController extends GetxController {
     }
     return dTemp;
   }
+
+  void updateCurrentTemp(double value){
+    this.currentTemp = value;
+    //save data local
+
+  }
 }
