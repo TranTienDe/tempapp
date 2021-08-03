@@ -1,6 +1,0 @@
-io/flutter/plugins/GeneratedPluginRegistrant.java
- io.flutter.plugins.GeneratedPluginRegistrant
-vn/icare/tempapp/BuildConfig.java
- vn.icare.tempapp.BuildConfig
-vn/icare/tempapp/MainActivity.java
- vn.icare.tempapp.MainActivity
