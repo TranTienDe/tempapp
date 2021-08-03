@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:get/get.dart';
 import 'package:tempapp/commons/utils/widget_utils.dart';
+import 'package:tempapp/pages/dashboard/home/widgets/line_chart_widget.dart';
 import 'package:tempapp/services/blue_service.dart';
 
 class HomeController extends GetxController {
@@ -9,7 +12,7 @@ class HomeController extends GetxController {
 
   var hasDevice = false.obs; //Kiểm tra nếu chưa có danh sách thiết bị
 
-  var isDeviceStating = false.obs; //Báo thay đổi trang thái kết nối trên bottomsheet
+  var isDeviceStating = false.obs; //Trạng thái kết nối trên bottomsheet
 
   var isDeviceConnecting = false.obs; //Trạng thái đang kết nối
 
@@ -18,6 +21,7 @@ class HomeController extends GetxController {
   BluetoothDevice? device;
 
   BluetoothDeviceState updateDeviceState = BluetoothDeviceState.disconnected;
+
   BluetoothDeviceState currentDeviceState = BluetoothDeviceState.disconnected;
 
   Stream<BluetoothState> get state => BlueService.instance.state;
@@ -26,7 +30,8 @@ class HomeController extends GetxController {
 
   Stream<List<ScanResult>> get scanResults => BlueService.instance.scanResults;
 
-  Future startScan({Duration? timeout}) => BlueService.instance.startScan(timeout: timeout);
+  Future startScan({Duration? timeout}) =>
+      BlueService.instance.startScan(timeout: timeout);
 
   Future stopScan() => BlueService.instance.stopScan();
 
@@ -34,8 +39,31 @@ class HomeController extends GetxController {
 
   double currentTemp = 0.0;
 
+  List<TempChartData> tempChartList = [];
+  List<TempChartData> warningChartList = [];
+
   @override
   void onInit() {
+    tempChartList = [
+      TempChartData(DateTime(2021, 08, 03, 15, 27, 00), 32.0, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 29, 00), 34.5, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 31, 00), 35.0, Colors.yellow),
+      TempChartData(DateTime(2021, 08, 03, 15, 33, 00), 36.5, Colors.yellow),
+      TempChartData(DateTime(2021, 08, 03, 15, 35, 00), 37.0, Colors.yellow),
+      TempChartData(DateTime(2021, 08, 03, 15, 37, 00), 38.0, Colors.yellow),
+      TempChartData(DateTime(2021, 08, 03, 15, 39, 00), 34.0, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 41, 00), 32.0, Colors.blue),
+    ];
+    warningChartList = [
+      TempChartData(DateTime(2021, 08, 03, 15, 27, 00), 35.7, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 29, 00), 35.7, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 31, 00), 35.7, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 33, 00), 35.7, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 35, 00), 35.7, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 37, 00), 35.7, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 39, 00), 35.7, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 41, 00), 35.7, Colors.blue),
+    ];
     super.onInit();
   }
 
@@ -50,9 +78,11 @@ class HomeController extends GetxController {
       this.isDeviceConnecting(true);
       this.device = device;
       this.deviceName(this.device!.name);
-      this.device!.connect(autoConnect: false).timeout(Duration(seconds: 20), onTimeout: () {
+      this.device!.connect(autoConnect: false).timeout(Duration(seconds: 20),
+          onTimeout: () {
         printText('--->call device connect timeout 1st.');
-        this.device!.connect(autoConnect: false).timeout(Duration(seconds: 20), onTimeout: () {
+        this.device!.connect(autoConnect: false).timeout(Duration(seconds: 20),
+            onTimeout: () {
           printText('--->call device connect timeout 2nd.');
           this.isDeviceConnecting(false);
         });
@@ -96,9 +126,8 @@ class HomeController extends GetxController {
     return dTemp;
   }
 
-  void updateCurrentTemp(double value){
+  void updateCurrentTemp(double value) {
     this.currentTemp = value;
     //save data local
-
   }
 }
