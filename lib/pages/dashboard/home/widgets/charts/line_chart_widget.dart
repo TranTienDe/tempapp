@@ -7,30 +7,42 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 class LineChartWidget extends StatelessWidget {
   final HomeController controller;
   final SizeInfoModel sizeInfo;
+  final bool limitY;
 
   const LineChartWidget(
-      {Key? key, required this.controller, required this.sizeInfo})
+      {Key? key,
+      required this.controller,
+      required this.sizeInfo,
+      required this.limitY})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
-      //title: ChartTitle(text: 'Yearly sales analysis', alignment: ChartAlignment.center),
       legend: Legend(isVisible: false),
       tooltipBehavior:
           TooltipBehavior(enable: true, textAlignment: ChartAlignment.near),
       primaryXAxis: DateTimeAxis(
         edgeLabelPlacement: EdgeLabelPlacement.shift,
-        rangePadding: ChartRangePadding.round,
         dateFormat: DateFormat.Hm(),
+        majorTickLines: const MajorTickLines(color: Colors.transparent),
       ),
-      primaryYAxis: NumericAxis(
-        minimum: 20,
-        maximum: 45,
-        labelFormat: '{value}°C',
-      ),
+      primaryYAxis: this.limitY
+          ? NumericAxis(
+              minimum: 20,
+              maximum: 45,
+              labelFormat: '{value}°C',
+              majorTickLines: const MajorTickLines(color: Colors.transparent),
+            )
+          : NumericAxis(
+              labelFormat: '{value}°C',
+              majorTickLines: const MajorTickLines(color: Colors.transparent),
+            ),
       series: <ChartSeries<TempChartData, DateTime>>[
         LineSeries<TempChartData, DateTime>(
+          onRendererCreated: (ChartSeriesController chartSeriesController) {
+            controller.tempChartSeriesController = chartSeriesController;
+          },
           name: 'Nhiệt độ',
           dataSource: controller.tempChartList,
           xValueMapper: (TempChartData temp, _) => temp.time,
@@ -41,11 +53,17 @@ class LineChartWidget extends StatelessWidget {
           markerSettings: MarkerSettings(isVisible: false),
         ),
         LineSeries<TempChartData, DateTime>(
+          onRendererCreated: (ChartSeriesController chartSeriesController) {
+            controller.warningChartSeriesController = chartSeriesController;
+          },
           name: 'Nhiệt độ cảnh báo',
           dataSource: controller.warningChartList,
           dashArray: <double>[5, 5],
           xValueMapper: (TempChartData temp, _) => temp.time,
           yValueMapper: (TempChartData temp, _) => temp.temp,
+          dataLabelSettings: DataLabelSettings(isVisible: false),
+          enableTooltip: false,
+          markerSettings: MarkerSettings(isVisible: false),
         ),
       ],
     );

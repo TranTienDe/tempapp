@@ -1,10 +1,13 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:get/get.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:tempapp/commons/constants/resource.dart';
 import 'package:tempapp/commons/utils/widget_utils.dart';
-import 'package:tempapp/pages/dashboard/home/widgets/line_chart_widget.dart';
+import 'package:tempapp/pages/dashboard/home/widgets/charts/line_chart_widget.dart';
 import 'package:tempapp/services/blue_service.dart';
 
 class HomeController extends GetxController {
@@ -38,37 +41,47 @@ class HomeController extends GetxController {
   Timer? deviceStateTimer;
 
   double currentTemp = 0.0;
+  double warningTemp = Resource.temperature_limit;
 
   List<TempChartData> tempChartList = [];
   List<TempChartData> warningChartList = [];
 
+  //Timer? timer;
+  ChartSeriesController? tempChartSeriesController;
+  ChartSeriesController? warningChartSeriesController;
+
   @override
   void onInit() {
-    tempChartList = [
-      TempChartData(DateTime(2021, 08, 03, 15, 27, 00), 32.0, Colors.blue),
-      TempChartData(DateTime(2021, 08, 03, 15, 29, 00), 34.5, Colors.blue),
-      TempChartData(DateTime(2021, 08, 03, 15, 31, 00), 35.0, Colors.yellow),
-      TempChartData(DateTime(2021, 08, 03, 15, 33, 00), 36.5, Colors.yellow),
-      TempChartData(DateTime(2021, 08, 03, 15, 35, 00), 37.0, Colors.yellow),
-      TempChartData(DateTime(2021, 08, 03, 15, 37, 00), 38.0, Colors.yellow),
-      TempChartData(DateTime(2021, 08, 03, 15, 39, 00), 34.0, Colors.blue),
-      TempChartData(DateTime(2021, 08, 03, 15, 41, 00), 32.0, Colors.blue),
-    ];
-    warningChartList = [
-      TempChartData(DateTime(2021, 08, 03, 15, 27, 00), 35.7, Colors.blue),
-      TempChartData(DateTime(2021, 08, 03, 15, 29, 00), 35.7, Colors.blue),
-      TempChartData(DateTime(2021, 08, 03, 15, 31, 00), 35.7, Colors.blue),
-      TempChartData(DateTime(2021, 08, 03, 15, 33, 00), 35.7, Colors.blue),
-      TempChartData(DateTime(2021, 08, 03, 15, 35, 00), 35.7, Colors.blue),
-      TempChartData(DateTime(2021, 08, 03, 15, 37, 00), 35.7, Colors.blue),
-      TempChartData(DateTime(2021, 08, 03, 15, 39, 00), 35.7, Colors.blue),
-      TempChartData(DateTime(2021, 08, 03, 15, 41, 00), 35.7, Colors.blue),
-    ];
+    // tempChartList = [
+    //   TempChartData(DateTime(2021, 08, 03, 15, 27, 00), 32.0, Colors.blue),
+    //   TempChartData(DateTime(2021, 08, 03, 15, 29, 02), 34.5, Colors.blue),
+    //   TempChartData(DateTime(2021, 08, 03, 15, 31, 04), 35.0, Colors.yellow),
+    //   TempChartData(DateTime(2021, 08, 03, 15, 33, 06), 36.5, Colors.yellow),
+    //   TempChartData(DateTime(2021, 08, 03, 15, 35, 08), 37.0, Colors.yellow),
+    //   TempChartData(DateTime(2021, 08, 03, 15, 37, 10), 38.0, Colors.yellow),
+    //   TempChartData(DateTime(2021, 08, 03, 15, 39, 12), 34.0, Colors.blue),
+    //   TempChartData(DateTime(2021, 08, 03, 15, 41, 14), 32.0, Colors.blue),
+    // ];
+
+    // warningChartList = [
+    //   TempChartData(DateTime(2021, 08, 03, 15, 27, 00), 35.7, Colors.blue),
+    //   TempChartData(DateTime(2021, 08, 03, 15, 29, 02), 35.7, Colors.blue),
+    //   TempChartData(DateTime(2021, 08, 03, 15, 31, 04), 35.7, Colors.blue),
+    //   TempChartData(DateTime(2021, 08, 03, 15, 33, 06), 35.7, Colors.blue),
+    //   TempChartData(DateTime(2021, 08, 03, 15, 35, 08), 35.7, Colors.blue),
+    //   TempChartData(DateTime(2021, 08, 03, 15, 37, 10), 35.7, Colors.blue),
+    //   TempChartData(DateTime(2021, 08, 03, 15, 39, 12), 35.7, Colors.blue),
+    //   TempChartData(DateTime(2021, 08, 03, 15, 41, 14), 35.7, Colors.blue),
+    // ];
+
+    //timer = Timer.periodic(const Duration(seconds: 2), updateChartDataSource);
+
     super.onInit();
   }
 
   @override
   void onClose() {
+    //timer?.cancel();
     super.onClose();
   }
 
@@ -128,6 +141,45 @@ class HomeController extends GetxController {
 
   void updateCurrentTemp(double value) {
     this.currentTemp = value;
-    //save data local
+    updateChartDataSource();
+  }
+
+  void updateChartDataSource() {
+    //double temp = getRandomInt(35, 39);
+    DateTime dateTime = DateTime.now();
+    printText('temp: ${this.currentTemp} - datetime: $dateTime');
+
+    tempChartList.add(TempChartData(dateTime, this.currentTemp, Colors.blue));
+    if (tempChartList.length == 20) {
+      tempChartList.removeAt(0);
+      tempChartSeriesController?.updateDataSource(
+        addedDataIndexes: <int>[tempChartList.length - 1],
+        removedDataIndexes: <int>[0],
+      );
+    } else {
+      tempChartSeriesController?.updateDataSource(
+        addedDataIndexes: <int>[tempChartList.length - 1],
+      );
+    }
+
+    //Nhiệt độ cảnh báo
+    warningChartList
+        .add(TempChartData(dateTime, this.warningTemp, Colors.blue));
+    if (warningChartList.length == 20) {
+      warningChartList.removeAt(0);
+      warningChartSeriesController?.updateDataSource(
+        addedDataIndexes: <int>[warningChartList.length - 1],
+        removedDataIndexes: <int>[0],
+      );
+    } else {
+      warningChartSeriesController?.updateDataSource(
+        addedDataIndexes: <int>[warningChartList.length - 1],
+      );
+    }
+  }
+
+  double getRandomInt(int min, int max) {
+    final math.Random _random = math.Random();
+    return (min + _random.nextInt(max - min)).toDouble();
   }
 }
