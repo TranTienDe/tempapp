@@ -252,7 +252,7 @@ class BatteryTempWidget extends StatelessWidget {
                         enableAnimation: true,
                       ),
                       MarkerPointer(
-                        value: 35.5,
+                        value: controller.warningTemp,
                         elevation: 4,
                         markerWidth: 23,
                         markerHeight: 26,
@@ -272,7 +272,7 @@ class BatteryTempWidget extends StatelessWidget {
                                 Text(
                                   '$tempValue',
                                   style: TextStyle(
-                                      color: tempValue > Resource.temperature_limit ? Colors.red : Colors.blue,
+                                      color: tempValue > controller.warningTemp ? Colors.red : Colors.blue,
                                       fontSize: sizeInfo.fontSize,
                                       fontWeight: FontWeight.bold),
                                 ),

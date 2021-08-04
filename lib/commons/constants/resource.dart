@@ -11,7 +11,7 @@ class Resource {
       'Vui lòng liên hệ với chúng tôi để nhận lại mật khẩu.';
   static const String str_otp_code = 'Nhận mã OTP';
 
-  static const int temperature_limit = 37;
+  static const double temperature_limit = 32.0;
   static const int battery_limit = 20;
 
   static const String phone_number = "0945 365 012";
