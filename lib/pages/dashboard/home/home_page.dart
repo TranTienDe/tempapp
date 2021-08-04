@@ -4,7 +4,7 @@ import 'package:tempapp/commons/constants/resource.dart';
 import 'package:tempapp/pages/base_page.dart';
 import 'package:tempapp/pages/dashboard/home/home_controller.dart';
 import 'package:tempapp/pages/dashboard/home/widgets/battery_temp_widget.dart';
-import 'package:tempapp/pages/dashboard/home/widgets/line_chart_widget.dart';
+import 'package:tempapp/pages/dashboard/home/widgets/charts/line_chart_widget.dart';
 import 'package:tempapp/pages/dashboard/home/widgets/notify_widget.dart';
 
 class HomePage extends GetView<HomeController> {
@@ -89,7 +89,7 @@ class HomePage extends GetView<HomeController> {
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.fromLTRB(
-                                                        5, 0, 5, 5),
+                                                        5, 0, 5, 0),
                                                 child: Image.asset(
                                                     'assets/images/fullscreen.png',
                                                     fit: BoxFit.contain,
@@ -108,8 +108,10 @@ class HomePage extends GetView<HomeController> {
                                       child: Container(
                                         //color: Colors.yellow,
                                         child: LineChartWidget(
-                                            controller: controller,
-                                            sizeInfo: sizeInfo),
+                                          controller: controller,
+                                          sizeInfo: sizeInfo,
+                                          limitY: true,
+                                        ),
                                       ),
                                     ),
                                   ],
