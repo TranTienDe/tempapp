@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:tempapp/commons/constants/resource.dart';
 import 'package:tempapp/pages/base_page.dart';
 import 'package:tempapp/pages/dashboard/home/home_controller.dart';
+import 'package:tempapp/pages/dashboard/home/widgets/charts/line_chart_full_widget.dart';
 import 'package:tempapp/pages/dashboard/home/widgets/charts/line_chart_widget.dart';
 
 class ChartPage extends StatelessWidget {

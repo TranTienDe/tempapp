@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -38,50 +36,29 @@ class HomeController extends GetxController {
 
   Future stopScan() => BlueService.instance.stopScan();
 
-  Timer? deviceStateTimer;
-
   double currentTemp = 0.0;
   double warningTemp = Resource.temperature_limit;
 
+  //Variable Chart
   List<TempChartData> tempChartList = [];
   List<TempChartData> warningChartList = [];
 
-  //Timer? timer;
   ChartSeriesController? tempChartSeriesController;
   ChartSeriesController? warningChartSeriesController;
 
+  final tempStreamController = StreamController<List<TempChartData>>.broadcast();
+  Stream<List<TempChartData>> get tempChartDataResult => tempStreamController.stream;
+
+  //End Chart
+
   @override
   void onInit() {
-    // tempChartList = [
-    //   TempChartData(DateTime(2021, 08, 03, 15, 27, 00), 32.0, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 29, 02), 34.5, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 31, 04), 35.0, Colors.yellow),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 33, 06), 36.5, Colors.yellow),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 35, 08), 37.0, Colors.yellow),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 37, 10), 38.0, Colors.yellow),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 39, 12), 34.0, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 41, 14), 32.0, Colors.blue),
-    // ];
-
-    // warningChartList = [
-    //   TempChartData(DateTime(2021, 08, 03, 15, 27, 00), 35.7, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 29, 02), 35.7, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 31, 04), 35.7, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 33, 06), 35.7, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 35, 08), 35.7, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 37, 10), 35.7, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 39, 12), 35.7, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 41, 14), 35.7, Colors.blue),
-    // ];
-
-    //timer = Timer.periodic(const Duration(seconds: 2), updateChartDataSource);
-
     super.onInit();
   }
 
   @override
   void onClose() {
-    //timer?.cancel();
+    tempStreamController.close();
     super.onClose();
   }
 
@@ -145,10 +122,7 @@ class HomeController extends GetxController {
   }
 
   void updateChartDataSource() {
-    //double temp = getRandomInt(35, 39);
     DateTime dateTime = DateTime.now();
-    printText('temp: ${this.currentTemp} - datetime: $dateTime');
-
     tempChartList.add(TempChartData(dateTime, this.currentTemp, Colors.blue));
     if (tempChartList.length == 20) {
       tempChartList.removeAt(0);
@@ -176,10 +150,8 @@ class HomeController extends GetxController {
         addedDataIndexes: <int>[warningChartList.length - 1],
       );
     }
-  }
 
-  double getRandomInt(int min, int max) {
-    final math.Random _random = math.Random();
-    return (min + _random.nextInt(max - min)).toDouble();
+    //push data
+    tempStreamController.sink.add(tempChartList);
   }
 }

@@ -5,6 +5,7 @@ import 'package:tempapp/pages/base_page.dart';
 import 'package:tempapp/pages/dashboard/home/home_controller.dart';
 import 'package:tempapp/pages/dashboard/home/widgets/battery_temp_widget.dart';
 import 'package:tempapp/pages/dashboard/home/widgets/charts/chart_page.dart';
+import 'package:tempapp/pages/dashboard/home/widgets/charts/line_chart_full_widget.dart';
 import 'package:tempapp/pages/dashboard/home/widgets/charts/line_chart_widget.dart';
 import 'package:tempapp/pages/dashboard/home/widgets/notify_widget.dart';
 

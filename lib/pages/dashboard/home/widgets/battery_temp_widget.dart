@@ -211,7 +211,7 @@ class BatteryTempWidget extends StatelessWidget {
       builder: (c, snapshot) {
         final value = (snapshot.data != null && snapshot.data!.length > 0)
             ? controller.getTempDataThermometer(snapshot.data!)
-            : 0.0;
+            : controller.currentTemp;
         controller.updateCurrentTemp(value);
         String date = DateFormat("yyyy-MM-dd hh:mm:ss").format(DateTime.now());
         printText('date: $date - Value: $value');

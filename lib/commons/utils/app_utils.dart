@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:math' as math;
 import 'package:crypto/crypto.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -47,5 +47,10 @@ class AppUtils {
   static sendMail(String mailAddress) {
     if (mailAddress.isEmpty) throw 'Chưa có email!';
     launch('mailto:$mailAddress');
+  }
+
+  static double getRandomInt(int min, int max) {
+    final math.Random _random = math.Random();
+    return (min + _random.nextInt(max - min)).toDouble();
   }
 }
