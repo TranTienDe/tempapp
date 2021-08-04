@@ -41,7 +41,7 @@ class ChartPage extends StatelessWidget {
             child: LineChartWidget(
               controller: controller,
               sizeInfo: sizeInfo,
-              limitY: false,
+              limitY: true,
             ),
           ),
         ),
