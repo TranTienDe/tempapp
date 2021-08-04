@@ -51,27 +51,27 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    // tempChartList = [
-    //   TempChartData(DateTime(2021, 08, 03, 15, 27, 00), 32.0, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 29, 00), 34.5, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 31, 00), 35.0, Colors.yellow),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 33, 00), 36.5, Colors.yellow),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 35, 00), 37.0, Colors.yellow),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 37, 00), 38.0, Colors.yellow),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 39, 00), 34.0, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 41, 00), 32.0, Colors.blue),
-    // ];
-    //
-    // warningChartList = [
-    //   TempChartData(DateTime(2021, 08, 03, 15, 27, 00), 35.7, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 29, 00), 35.7, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 31, 00), 35.7, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 33, 00), 35.7, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 35, 00), 35.7, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 37, 00), 35.7, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 39, 00), 35.7, Colors.blue),
-    //   TempChartData(DateTime(2021, 08, 03, 15, 41, 00), 35.7, Colors.blue),
-    // ];
+    tempChartList = [
+      TempChartData(DateTime(2021, 08, 03, 15, 27, 00), 32.0, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 29, 00), 34.5, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 31, 00), 35.0, Colors.yellow),
+      TempChartData(DateTime(2021, 08, 03, 15, 33, 00), 36.5, Colors.yellow),
+      TempChartData(DateTime(2021, 08, 03, 15, 35, 00), 37.0, Colors.yellow),
+      TempChartData(DateTime(2021, 08, 03, 15, 37, 00), 38.0, Colors.yellow),
+      TempChartData(DateTime(2021, 08, 03, 15, 39, 00), 34.0, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 41, 00), 32.0, Colors.blue),
+    ];
+
+    warningChartList = [
+      TempChartData(DateTime(2021, 08, 03, 15, 27, 00), 35.7, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 29, 00), 35.7, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 31, 00), 35.7, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 33, 00), 35.7, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 35, 00), 35.7, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 37, 00), 35.7, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 39, 00), 35.7, Colors.blue),
+      TempChartData(DateTime(2021, 08, 03, 15, 41, 00), 35.7, Colors.blue),
+    ];
 
     //timer = Timer.periodic(const Duration(seconds: 2), updateChartDataSource);
 
@@ -162,7 +162,8 @@ class HomeController extends GetxController {
     }
 
     //Nhiệt độ cảnh báo
-    warningChartList.add(TempChartData(dateTime, this.warningTemp, Colors.blue));
+    warningChartList
+        .add(TempChartData(dateTime, this.warningTemp, Colors.blue));
     if (warningChartList.length == 20) {
       warningChartList.removeAt(0);
       warningChartSeriesController?.updateDataSource(

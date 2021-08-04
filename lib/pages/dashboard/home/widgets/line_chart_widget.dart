@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tempapp/commons/constants/resource.dart';
 import 'package:tempapp/models/size_info_model.dart';
 import 'package:tempapp/pages/dashboard/home/home_controller.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -15,47 +16,47 @@ class LineChartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
-        legend: Legend(isVisible: false),
-        tooltipBehavior:
-            TooltipBehavior(enable: true, textAlignment: ChartAlignment.near),
-        primaryXAxis: DateTimeAxis(
-          edgeLabelPlacement: EdgeLabelPlacement.shift,
-          //rangePadding: ChartRangePadding.round,
-          dateFormat: DateFormat.Hm(),
+      legend: Legend(isVisible: false),
+      tooltipBehavior:
+          TooltipBehavior(enable: true, textAlignment: ChartAlignment.near),
+      primaryXAxis: DateTimeAxis(
+        edgeLabelPlacement: EdgeLabelPlacement.shift,
+        //rangePadding: ChartRangePadding.round,
+        dateFormat: DateFormat.Hm(),
+      ),
+      primaryYAxis: NumericAxis(
+        minimum: 20,
+        maximum: 45,
+        labelFormat: '{value}°C',
+      ),
+      series: <ChartSeries<TempChartData, DateTime>>[
+        LineSeries<TempChartData, DateTime>(
+          onRendererCreated: (ChartSeriesController chartSeriesController) {
+            controller.tempChartSeriesController = chartSeriesController;
+          },
+          name: 'Nhiệt độ',
+          dataSource: controller.tempChartList,
+          xValueMapper: (TempChartData temp, _) => temp.time,
+          yValueMapper: (TempChartData temp, _) => temp.temp,
+          //pointColorMapper: (TempChartData temp, _) => temp.segmentColor,
+          dataLabelSettings: DataLabelSettings(isVisible: false),
+          enableTooltip: true,
+          markerSettings: MarkerSettings(isVisible: false),
         ),
-        primaryYAxis: NumericAxis(
-          minimum: 20,
-          maximum: 45,
-          labelFormat: '{value}°C',
+        LineSeries<TempChartData, DateTime>(
+          onRendererCreated: (ChartSeriesController chartSeriesController) {
+            controller.warningChartSeriesController = chartSeriesController;
+          },
+          name: 'Nhiệt độ cảnh báo',
+          dataSource: controller.warningChartList,
+          dashArray: <double>[5, 5],
+          xValueMapper: (TempChartData temp, _) => temp.time,
+          yValueMapper: (TempChartData temp, _) => temp.temp,
+          dataLabelSettings: DataLabelSettings(isVisible: false),
+          enableTooltip: false,
+          markerSettings: MarkerSettings(isVisible: false),
         ),
-        series: <ChartSeries<TempChartData, DateTime>>[
-          LineSeries<TempChartData, DateTime>(
-            onRendererCreated: (ChartSeriesController chartSeriesController) {
-              controller.tempChartSeriesController = chartSeriesController;
-            },
-            name: 'Nhiệt độ',
-            dataSource: controller.tempChartList,
-            xValueMapper: (TempChartData temp, _) => temp.time,
-            yValueMapper: (TempChartData temp, _) => temp.temp,
-            pointColorMapper: (TempChartData temp, _) => temp.segmentColor,
-            dataLabelSettings: DataLabelSettings(isVisible: false),
-            enableTooltip: true,
-            markerSettings: MarkerSettings(isVisible: false),
-          ),
-          LineSeries<TempChartData, DateTime>(
-            onRendererCreated: (ChartSeriesController chartSeriesController) {
-              controller.warningChartSeriesController = chartSeriesController;
-            },
-            name: 'Nhiệt độ cảnh báo',
-            dataSource: controller.warningChartList,
-            dashArray: <double>[5, 5],
-            xValueMapper: (TempChartData temp, _) => temp.time,
-            yValueMapper: (TempChartData temp, _) => temp.temp,
-            dataLabelSettings: DataLabelSettings(isVisible: false),
-            enableTooltip: false,
-            markerSettings: MarkerSettings(isVisible: false),
-          ),
-        ],
+      ],
     );
   }
 }

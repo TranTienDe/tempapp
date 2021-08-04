@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Resource {
   static const bool debug = true;
   static const String appName = 'iCarevn';
@@ -21,7 +23,11 @@ class Resource {
   static const String bluetooth_device_name = "thermometer";
 
   //Thermometer nhiệt dô
-  static const String UUID_TEMPERATURE_SERVICE = "00001809-0000-1000-8000-00805f9b34fb";
-  static const String UUID_TEMPERATURE_CHARACTERISTIC = "00002a1e-0000-1000-8000-00805f9b34fb";
+  static const String UUID_TEMPERATURE_SERVICE =
+      "00001809-0000-1000-8000-00805f9b34fb";
+  static const String UUID_TEMPERATURE_CHARACTERISTIC =
+      "00002a1e-0000-1000-8000-00805f9b34fb";
 
+  /// holds theme based current palette color
+  static const Color backgroundColor = const Color.fromRGBO(0, 116, 227, 1);
 }
