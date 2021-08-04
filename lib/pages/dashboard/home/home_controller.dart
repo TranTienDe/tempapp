@@ -49,6 +49,9 @@ class HomeController extends GetxController {
   final tempStreamController = StreamController<List<TempChartData>>.broadcast();
   Stream<List<TempChartData>> get tempChartDataResult => tempStreamController.stream;
 
+  final tempRealTimeStreamController = StreamController<double>.broadcast();
+  Stream<double> get tempRealTimeResult => tempRealTimeStreamController.stream;
+
   //End Chart
 
   @override
@@ -59,6 +62,7 @@ class HomeController extends GetxController {
   @override
   void onClose() {
     tempStreamController.close();
+    tempRealTimeStreamController.close();
     super.onClose();
   }
 
@@ -118,6 +122,7 @@ class HomeController extends GetxController {
 
   void updateCurrentTemp(double value) {
     this.currentTemp = value;
+    tempRealTimeStreamController.sink.add(value);
     updateChartDataSource();
   }
 

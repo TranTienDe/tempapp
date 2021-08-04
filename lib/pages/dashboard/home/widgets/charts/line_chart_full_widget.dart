@@ -24,7 +24,7 @@ class LineChartFullWidget extends StatelessWidget {
         initialData: [],
         builder: (context, snapshot) {
           return SfCartesianChart(
-            legend: Legend(isVisible: false),
+            legend: Legend(isVisible: true),
             tooltipBehavior:
             TooltipBehavior(enable: true, textAlignment: ChartAlignment.near),
             primaryXAxis: DateTimeAxis(

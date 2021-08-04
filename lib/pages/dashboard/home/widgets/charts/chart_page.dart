@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:tempapp/commons/constants/resource.dart';
 import 'package:tempapp/pages/base_page.dart';
 import 'package:tempapp/pages/dashboard/home/home_controller.dart';
@@ -8,6 +9,7 @@ import 'package:tempapp/pages/dashboard/home/widgets/charts/line_chart_widget.da
 
 class ChartPage extends StatelessWidget {
   final HomeController controller;
+
   const ChartPage({Key? key, required this.controller}) : super(key: key);
 
   @override
@@ -17,29 +19,35 @@ class ChartPage extends StatelessWidget {
       return SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            title: Text('Biểu đồ nhiệt độ'),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                child: Container(
-                  height: 40,
-                  width: 40,
-                  child: IconButton(
-                    icon: const Icon(Icons.info_outline, color: Colors.white),
-                    onPressed: () {},
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Biểu đồ nhiệt độ'),
+                Container(
+                  child: Row(
+                    children: [
+                      Image.asset('assets/images/temperature_indicator_light.png',
+                          fit: BoxFit.contain, height: 20, width: 20),
+                      StreamBuilder<double>(
+                        stream: controller.tempRealTimeResult,
+                        initialData: 0.0,
+                        builder: (context, snapshot) {
+                          return Text('${snapshot.data}°C');
+                        }
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           body: Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(12), bottom: Radius.circular(0)),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(12), bottom: Radius.circular(0)),
               color: Resource.cardThemeColor,
             ),
             padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-            child: LineChartWidget(
+            child: LineChartFullWidget(
               controller: controller,
               sizeInfo: sizeInfo,
               limitY: true,
