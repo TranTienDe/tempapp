@@ -24,7 +24,6 @@ class LineChartWidget extends StatelessWidget {
           TooltipBehavior(enable: true, textAlignment: ChartAlignment.near),
       primaryXAxis: DateTimeAxis(
         edgeLabelPlacement: EdgeLabelPlacement.shift,
-        //rangePadding: ChartRangePadding.round,
         dateFormat: DateFormat.Hm(),
         majorTickLines: const MajorTickLines(color: Colors.transparent),
       ),

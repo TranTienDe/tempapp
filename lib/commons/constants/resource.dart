@@ -30,4 +30,10 @@ class Resource {
 
   /// holds theme based current palette color
   static const Color backgroundColor = const Color.fromRGBO(0, 116, 227, 1);
+
+  /// holds light theme current palette color
+  static const Color paletteColor = const Color.fromRGBO(0, 116, 227, 1);
+
+  /// Holds theme based card color
+  static const Color cardThemeColor = Colors.white;
 }

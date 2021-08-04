@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tempapp/commons/constants/resource.dart';
+import 'package:tempapp/commons/utils/widget_utils.dart';
 import 'package:tempapp/pages/base_page.dart';
 import 'package:tempapp/pages/dashboard/home/home_controller.dart';
 import 'package:tempapp/pages/dashboard/home/widgets/battery_temp_widget.dart';
+import 'package:tempapp/pages/dashboard/home/widgets/charts/chart_page.dart';
 import 'package:tempapp/pages/dashboard/home/widgets/charts/line_chart_widget.dart';
 import 'package:tempapp/pages/dashboard/home/widgets/notify_widget.dart';
 
@@ -69,7 +71,11 @@ class HomePage extends GetView<HomeController> {
                                   children: [
                                     InkWell(
                                       splashColor: Colors.grey.withOpacity(0.4),
-                                      onTap: () {},
+                                      onTap: () {
+                                        var result = Get.to(() =>
+                                            ChartPage(controller: controller));
+                                        printText('Result: $result');
+                                      },
                                       child: Padding(
                                         padding: const EdgeInsets.fromLTRB(
                                             10, 5, 10, 0),

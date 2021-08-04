@@ -17,10 +17,16 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  SystemChrome.setEnabledSystemUIOverlays(
-      [SystemUiOverlay.bottom, SystemUiOverlay.top]);
-  SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarColor: Colors.blue.shade400));
+  //Show Statusbar
+  //SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+
+  //Hide Statusbar
+  SystemChrome.setEnabledSystemUIOverlays([]);
+
+  //Statusbar Color
+  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  //   statusBarColor: Colors.blue.shade100,
+  // ));
 
   runApp(MyApp());
 }
