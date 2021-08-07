@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tempapp/commons/constants/resource.dart';
 
 class ConfirmDialog {
   static void showButtonPress(

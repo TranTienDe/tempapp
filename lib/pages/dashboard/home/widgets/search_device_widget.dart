@@ -4,7 +4,6 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'package:get/get.dart';
 import 'package:tempapp/commons/constants/resource.dart';
 import 'package:tempapp/commons/utils/widget_utils.dart';
-import 'package:tempapp/commons/widgets/confirm_dialog.dart';
 import 'package:tempapp/models/size_info_model.dart';
 import 'package:tempapp/pages/dashboard/home/home_controller.dart';
 

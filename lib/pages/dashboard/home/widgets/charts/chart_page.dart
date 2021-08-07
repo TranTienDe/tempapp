@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:tempapp/commons/constants/resource.dart';
 import 'package:tempapp/pages/base_page.dart';
 import 'package:tempapp/pages/dashboard/home/home_controller.dart';
 import 'package:tempapp/pages/dashboard/home/widgets/charts/line_chart_full_widget.dart';
-import 'package:tempapp/pages/dashboard/home/widgets/charts/line_chart_widget.dart';
 
 class ChartPage extends StatelessWidget {
   final HomeController controller;
@@ -14,7 +12,6 @@ class ChartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIOverlays([]);
     return BasePage(builder: (context, sizeInfo) {
       return SafeArea(
         child: Scaffold(
@@ -41,16 +38,19 @@ class ChartPage extends StatelessWidget {
               ],
             ),
           ),
-          body: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(12), bottom: Radius.circular(0)),
-              color: Resource.cardThemeColor,
-            ),
-            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-            child: LineChartFullWidget(
-              controller: controller,
-              sizeInfo: sizeInfo,
-              limitY: true,
+          body: Hero(
+            tag: 'chartTag',
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(12), bottom: Radius.circular(0)),
+                color: Resource.cardThemeColor,
+              ),
+              padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+              child: LineChartFullWidget(
+                controller: controller,
+                sizeInfo: sizeInfo,
+                limitY: true,
+              ),
             ),
           ),
         ),

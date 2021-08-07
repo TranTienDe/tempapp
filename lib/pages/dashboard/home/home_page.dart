@@ -63,35 +63,56 @@ class HomePage extends GetView<HomeController> {
                                 elevation: 2.0,
                                 child: Column(
                                   children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        Get.to(() => ChartPage(controller: controller));
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              '',
-                                              softWrap: true,
-                                              textScaleFactor: 1,
-                                            ),
-                                            Container(
-                                              height: 24,
-                                              width: 24,
-                                              color: Colors.transparent,
-                                              child: Padding(
-                                                padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                                                child: Image.asset('assets/images/fullscreen.png',
-                                                    fit: BoxFit.contain,
-                                                    height: 20,
-                                                    width: 20,
-                                                    color: Resource.backgroundColor),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            '',
+                                            softWrap: true,
+                                            textScaleFactor: 1,
+                                          ),
+                                          IconButton(
+                                            constraints: BoxConstraints(maxHeight: 30),
+                                            icon: Image.asset('assets/images/fullscreen.png',
+                                                fit: BoxFit.contain, color: Resource.backgroundColor),
+                                            onPressed: () {
+                                              Future.delayed(Duration(milliseconds: 100), () {
+                                                //Get.to(() => ChartPage(controller: controller));
+
+                                                /* Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      fullscreenDialog: true,
+                                                      builder: (BuildContext context) =>
+                                                          ChartPage(controller: controller)),
+                                                );*/
+
+                                                Navigator.of(context).push(
+                                                  PageRouteBuilder(
+                                                    fullscreenDialog: true,
+                                                    transitionDuration: Duration(milliseconds: 1000),
+                                                    pageBuilder: (BuildContext context, Animation<double> animation,
+                                                        Animation<double> secondaryAnimation) {
+                                                      return ChartPage(controller: controller);
+                                                    },
+                                                    transitionsBuilder: (BuildContext context,
+                                                        Animation<double> animation,
+                                                        Animation<double> secondaryAnimation,
+                                                        Widget child) {
+                                                      return Align(
+                                                        child: FadeTransition(
+                                                          opacity: animation,
+                                                          child: child,
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                );
+                                              });
+                                            },
+                                          ),
+                                        ],
                                       ),
                                     ),
                                     Expanded(
