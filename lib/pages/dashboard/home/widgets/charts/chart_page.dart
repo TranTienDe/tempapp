@@ -30,7 +30,7 @@ class ChartPage extends StatelessWidget {
                           fit: BoxFit.contain, height: 20, width: 20),
                       StreamBuilder<double>(
                         stream: controller.tempRealTimeResult,
-                        initialData: 0.0,
+                        initialData: controller.currentTemp,
                         builder: (context, snapshot) {
                           return Text('${snapshot.data}°C');
                         }

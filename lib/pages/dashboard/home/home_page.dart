@@ -5,7 +5,6 @@ import 'package:tempapp/pages/base_page.dart';
 import 'package:tempapp/pages/dashboard/home/home_controller.dart';
 import 'package:tempapp/pages/dashboard/home/widgets/battery_temp_widget.dart';
 import 'package:tempapp/pages/dashboard/home/widgets/charts/chart_page.dart';
-import 'package:tempapp/pages/dashboard/home/widgets/charts/line_chart_full_widget.dart';
 import 'package:tempapp/pages/dashboard/home/widgets/charts/line_chart_widget.dart';
 import 'package:tempapp/pages/dashboard/home/widgets/notify_widget.dart';
 
@@ -23,10 +22,8 @@ class HomePage extends GetView<HomeController> {
             brightness: Brightness.light,
             elevation: 0.8,
             title: Text(Resource.appName,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline5!
-                    .copyWith(color: Colors.blue, fontWeight: FontWeight.bold)),
+                style:
+                    Theme.of(context).textTheme.headline5!.copyWith(color: Colors.blue, fontWeight: FontWeight.bold)),
             actions: [NotifyWidget(controller: controller, sizeInfo: sizeInfo)],
           ),
           body: Container(
@@ -34,8 +31,7 @@ class HomePage extends GetView<HomeController> {
             children: [
               Container(
                 color: Colors.white,
-                child: BatteryTempWidget(
-                    controller: controller, sizeInfo: sizeInfo),
+                child: BatteryTempWidget(controller: controller, sizeInfo: sizeInfo),
               ),
               Expanded(
                 child: DefaultTabController(
@@ -49,9 +45,7 @@ class HomePage extends GetView<HomeController> {
                           unselectedLabelColor: Colors.black,
                           indicator: BoxDecoration(
                             color: Colors.transparent,
-                            border: Border(
-                                bottom:
-                                    BorderSide(color: Colors.blue, width: 3)),
+                            border: Border(bottom: BorderSide(color: Colors.blue, width: 3)),
                           ),
                           tabs: [
                             Tab(text: 'Biểu đồ nhiệt độ'),
@@ -69,18 +63,14 @@ class HomePage extends GetView<HomeController> {
                                 elevation: 2.0,
                                 child: Column(
                                   children: [
-                                    InkWell(
-                                      splashColor: Colors.grey.withOpacity(0.4),
+                                    GestureDetector(
                                       onTap: () {
-                                        Get.to(() =>
-                                            ChartPage(controller: controller));
+                                        Get.to(() => ChartPage(controller: controller));
                                       },
                                       child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            10, 5, 10, 0),
+                                        padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
                                               '',
@@ -92,16 +82,12 @@ class HomePage extends GetView<HomeController> {
                                               width: 24,
                                               color: Colors.transparent,
                                               child: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        5, 0, 5, 0),
-                                                child: Image.asset(
-                                                    'assets/images/fullscreen.png',
+                                                padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                                child: Image.asset('assets/images/fullscreen.png',
                                                     fit: BoxFit.contain,
                                                     height: 20,
                                                     width: 20,
-                                                    color: Resource
-                                                        .backgroundColor),
+                                                    color: Resource.backgroundColor),
                                               ),
                                             ),
                                           ],
@@ -122,9 +108,7 @@ class HomePage extends GetView<HomeController> {
                                 ),
                               ),
                             ),
-                            Container(
-                                color: Colors.white,
-                                child: Center(child: Text('Hướng dẫn'))),
+                            Container(color: Colors.white, child: Center(child: Text('Hướng dẫn'))),
                           ],
                         ),
                       ),

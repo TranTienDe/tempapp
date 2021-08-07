@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:tempapp/pages/dashboard/dashboard_binding.dart';
 import 'package:tempapp/pages/dashboard/dashboard_page.dart';
-import 'package:tempapp/pages/dashboard/home/widgets/charts/chart_page.dart';
 import 'package:tempapp/pages/login/forgot_password_page.dart';
 import 'package:tempapp/pages/login/login_binding.dart';
 import 'package:tempapp/pages/login/login_page.dart';

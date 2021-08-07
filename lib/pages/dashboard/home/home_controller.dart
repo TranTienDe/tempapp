@@ -31,8 +31,7 @@ class HomeController extends GetxController {
 
   Stream<List<ScanResult>> get scanResults => BlueService.instance.scanResults;
 
-  Future startScan({Duration? timeout}) =>
-      BlueService.instance.startScan(timeout: timeout);
+  Future startScan({Duration? timeout}) => BlueService.instance.startScan(timeout: timeout);
 
   Future stopScan() => BlueService.instance.stopScan();
 
@@ -40,16 +39,18 @@ class HomeController extends GetxController {
   double warningTemp = Resource.temperature_limit;
 
   //Variable Chart
-  List<TempChartData> tempChartList = [];
-  List<TempChartData> warningChartList = [];
+  List<TempChartData> tempChartList = []; // Mảng nhiệt độ hiện tại đo được.
+  List<TempChartData> warningChartList = []; // Mảng nhiệ độ cảnh báo.
 
   ChartSeriesController? tempChartSeriesController;
   ChartSeriesController? warningChartSeriesController;
 
   final tempStreamController = StreamController<List<TempChartData>>.broadcast();
+
   Stream<List<TempChartData>> get tempChartDataResult => tempStreamController.stream;
 
   final tempRealTimeStreamController = StreamController<double>.broadcast();
+
   Stream<double> get tempRealTimeResult => tempRealTimeStreamController.stream;
 
   //End Chart
@@ -72,11 +73,9 @@ class HomeController extends GetxController {
       this.isDeviceConnecting(true);
       this.device = device;
       this.deviceName(this.device!.name);
-      this.device!.connect(autoConnect: false).timeout(Duration(seconds: 20),
-          onTimeout: () {
+      this.device!.connect(autoConnect: false).timeout(Duration(seconds: 20), onTimeout: () {
         printText('--->call device connect timeout 1st.');
-        this.device!.connect(autoConnect: false).timeout(Duration(seconds: 20),
-            onTimeout: () {
+        this.device!.connect(autoConnect: false).timeout(Duration(seconds: 20), onTimeout: () {
           printText('--->call device connect timeout 2nd.');
           this.isDeviceConnecting(false);
         });
@@ -122,10 +121,11 @@ class HomeController extends GetxController {
 
   void updateCurrentTemp(double value) {
     this.currentTemp = value;
-    tempRealTimeStreamController.sink.add(value);
+    this.tempRealTimeStreamController.sink.add(value);
     updateChartDataSource();
   }
 
+  // Cập nhật nhiệt độ hiện tại đo được.
   void updateChartDataSource() {
     DateTime dateTime = DateTime.now();
     tempChartList.add(TempChartData(dateTime, this.currentTemp, Colors.blue));
@@ -141,9 +141,8 @@ class HomeController extends GetxController {
       );
     }
 
-    //Nhiệt độ cảnh báo
-    warningChartList
-        .add(TempChartData(dateTime, this.warningTemp, Colors.blue));
+    // Mảng nhiệt độ cảnh báo
+    warningChartList.add(TempChartData(dateTime, this.warningTemp, Colors.blue));
     if (warningChartList.length == 20) {
       warningChartList.removeAt(0);
       warningChartSeriesController?.updateDataSource(
@@ -156,7 +155,8 @@ class HomeController extends GetxController {
       );
     }
 
-    //push data
+    // Push data to stream
     tempStreamController.sink.add(tempChartList);
   }
+
 }

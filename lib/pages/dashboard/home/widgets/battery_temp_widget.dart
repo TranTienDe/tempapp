@@ -96,13 +96,13 @@ class BatteryTempWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          InkWell(
+          GestureDetector(
             child: Container(
               color: Colors.white,
               child: Image.asset('assets/gifs/device_transparent.gif',
                   height: sizeInfo.screenSize.height * 0.2, fit: BoxFit.contain),
             ),
-            onTap: () => showDeviceState(controller, sizeInfo),
+            onTap: () => searchDevice(controller, sizeInfo),
           ),
           Container(
             margin: EdgeInsets.symmetric(vertical: 10),
@@ -120,7 +120,7 @@ class BatteryTempWidget extends StatelessWidget {
                   style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: sizeInfo.fontSize * 0.8),
                 ),
               ),
-              onPressed: () => showDeviceState(controller, sizeInfo),
+              onPressed: () => searchDevice(controller, sizeInfo),
             ),
           )
         ],
@@ -157,9 +157,9 @@ class BatteryTempWidget extends StatelessWidget {
               return Obx(() {
                 if (controller.isDeviceConnecting.value) {
                   printText('--->call isDeviceConnecting = true.');
-                  return InkWell(
+                  return GestureDetector(
                     child: ProgressBarStyle(sizeInfo: sizeInfo),
-                    onTap: () => showDeviceState(controller, sizeInfo),
+                    onTap: () => searchDevice(controller, sizeInfo),
                   );
                 } else {
                   printText('--->call isDeviceConnecting = false.');
@@ -208,8 +208,8 @@ class BatteryTempWidget extends StatelessWidget {
 
   //Hiện thị nhiệt độ theo dõi
   Widget showTempWatchWidget(double tempValue) {
-    return InkWell(
-      onTap: () => showDeviceState(controller, sizeInfo),
+    return GestureDetector(
+      onTap: () => searchDevice(controller, sizeInfo),
       child: Container(
         child: Center(
           child: Column(
@@ -300,8 +300,8 @@ class BatteryTempWidget extends StatelessWidget {
 
   //Hiện thị nhiệt độ none
   Widget showNoneTempWatchWidget(double tempValue) {
-    return InkWell(
-      onTap: () => showDeviceState(controller, sizeInfo),
+    return GestureDetector(
+      onTap: () => searchDevice(controller, sizeInfo),
       child: Container(
         child: Center(
           child: Column(

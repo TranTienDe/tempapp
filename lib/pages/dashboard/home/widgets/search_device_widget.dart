@@ -4,17 +4,11 @@ import 'package:flutter_blue/flutter_blue.dart';
 import 'package:get/get.dart';
 import 'package:tempapp/commons/constants/resource.dart';
 import 'package:tempapp/commons/utils/widget_utils.dart';
+import 'package:tempapp/commons/widgets/confirm_dialog.dart';
 import 'package:tempapp/models/size_info_model.dart';
 import 'package:tempapp/pages/dashboard/home/home_controller.dart';
 
-void showDeviceState(HomeController controller, SizeInfoModel sizeInfo) {
-  if (controller.device == null) {
-    Future.delayed(Duration(milliseconds: 1), () {
-      controller.isStartScan(true);
-      controller.startScan(timeout: Duration(seconds: 4)).whenComplete(() => controller.isStartScan(false));
-    });
-  }
-
+void searchDevice(HomeController controller, SizeInfoModel sizeInfo) {
   Get.bottomSheet(
     Container(
       height: sizeInfo.screenSize.height * 0.25,
@@ -22,14 +16,70 @@ void showDeviceState(HomeController controller, SizeInfoModel sizeInfo) {
         color: Colors.white,
         borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
       ),
-      child: Center(
-        child: Column(
-          children: [
-            titleWidget(controller, sizeInfo),
-            bodyWidget(sizeInfo),
-          ],
-        ),
-      ),
+      child: StreamBuilder<BluetoothState>(
+          stream: controller.state,
+          initialData: BluetoothState.off,
+          builder: (context, snapshot) {
+            if (snapshot.data != null && snapshot.data == BluetoothState.on) {
+              printText('--->BluetoothState.on');
+              if (controller.device == null) {
+                Future.delayed(Duration(milliseconds: 1), () {
+                  controller.isStartScan(true);
+                  controller.startScan(timeout: Duration(seconds: 4)).whenComplete(() => controller.isStartScan(false));
+                });
+              }
+
+              return Center(
+                child: Column(
+                  children: [
+                    titleWidget(controller, sizeInfo),
+                    bodyWidget(sizeInfo),
+                  ],
+                ),
+              );
+            } else {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Row(
+                            children: [
+                              Icon(Icons.bluetooth_disabled_rounded, color: Colors.blue),
+                              SizedBox(width: 5),
+                              Text('Bluetooth đang tắt !',
+                                  style: TextStyle(
+                                      fontSize: sizeInfo.fontSize, fontWeight: FontWeight.w500, color: Colors.blue)),
+                            ],
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              shape: CircleBorder(), primary: Colors.grey.shade400, padding: EdgeInsets.all(1)),
+                          child: Container(
+                            width: 35,
+                            height: 35,
+                            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey.shade400),
+                            child: Icon(Icons.close, color: Colors.grey.shade900),
+                          ),
+                          onPressed: () => Get.back(),
+                        ),
+                      ],
+                    ),
+                    Divider(thickness: 1.0, color: Colors.black38),
+                    Padding(
+                      padding: EdgeInsets.only(top: 5.0),
+                      child: Text('Vui lòng bật chức năng Bluetooth !', style: TextStyle(color: Colors.black87)),
+                    )
+                  ],
+                ),
+              );
+            }
+          }),
     ),
     isDismissible: true,
   );
